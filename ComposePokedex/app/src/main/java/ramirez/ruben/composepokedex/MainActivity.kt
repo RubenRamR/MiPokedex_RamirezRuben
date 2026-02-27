@@ -43,11 +43,11 @@ class MainActivity : ComponentActivity() {
         "Pikachu",
         25,
         "Electric",
-        "sisisisii",
+        "Pikachu, el Pokémon Ratón (tipo eléctrico#025), es conocido por almacenar electricidad en sus mejillas rojas, lanzando descargas cuando se enfada o se siente amenazado. Es amarillo con rayas marrones en la espalda, orejas largas con puntas negras y una cola en forma de rayo.",
         0.4f,
         6f,
         true,
-        "nonoononon",
+        "Electricidad Estática",
         R.drawable.pikachu
     )
 
