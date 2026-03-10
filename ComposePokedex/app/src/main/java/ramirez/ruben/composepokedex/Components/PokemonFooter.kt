@@ -57,7 +57,7 @@ fun PokemonFooter(modifier: Modifier = Modifier) {
     ) {
         PokemonNavItem(
             position = "left",
-            image = R.drawable.arbok_poke,
+            image = R.drawable.arbok,
             name = "Arbok",
             number = 24
         )

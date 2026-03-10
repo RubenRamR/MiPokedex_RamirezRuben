@@ -33,6 +33,8 @@ import androidx.compose.ui.zIndex
 import ramirez.ruben.composepokedex.Components.Ability
 import ramirez.ruben.composepokedex.Components.Chip
 import ramirez.ruben.composepokedex.domain.Pokemon
+import ramirez.ruben.composepokedex.navigation.MyApp
+import ramirez.ruben.composepokedex.screens.PokemonDetailScreen
 import ramirez.ruben.composepokedex.ui.theme.ComposePokedexTheme
 import ramirez.ruben.composepokedex.ui.theme.electricYellow
 import ramirez.ruben.composepokedex.ui.theme.offWhite
@@ -54,159 +56,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             ComposePokedexTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        pokemon,
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                MyApp()
             }
         }
-    }
-}
-
-@Composable
-fun PokemonCard(
-    name: String,
-    weight: Float,
-    height: Float,
-    description: String,
-    ability: String,
-    image: Int,
-    type: String
-) {
-    Box(contentAlignment = Alignment.TopCenter) {
-        Image(
-            painter = painterResource(image),
-            contentDescription = name,
-            Modifier
-                .offset(0.dp, -80.dp)
-                .zIndex(2f)
-                .size(130.dp),
-            contentScale = ContentScale.Fit
-        )
-        Card(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-            colors = CardDefaults.cardColors(containerColor = offWhite)
-        ) {
-            Column(Modifier.fillMaxWidth()) {
-                Chip(
-                    type,
-                    electricYellow,
-                    Modifier
-                        .padding(top = 70.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(.8f)
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = 5.dp), horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Column() {
-                        Ability("row", label = "Altura", "${height}m")
-                        Ability("row", "Peso", "${weight}kg")
-                    }
-                    Ability("column", label = "Habilidad", value = ability)
-                }
-
-                Row(
-                    Modifier
-                        .fillMaxWidth(.8f)
-                        .align(Alignment.CenterHorizontally)
-                        .padding(25.dp)
-                ) {
-                    Text(description)
-                }
-                Spacer(modifier = Modifier.weight(1f))
-
-                PokemonFooter()
-            }
-
-        }
-    }
-}
-
-@Composable
-fun PokemonHeader(name: String, number: Int, fav: Boolean) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(15.dp), horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column() {
-            Text(name)
-            Text("#${number}", modifier = Modifier.align(Alignment.End))
-        }
-        Box {
-            Image(
-                painter = painterResource(R.drawable.pokeball),
-                contentDescription = "pokeball image",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .size(130.dp)
-                    .offset(30.dp, 20.dp)
-            )
-
-            Image(
-                painter = painterResource(if (fav) R.drawable.star_filled else R.drawable.star_outline),
-                contentDescription = if (fav) "yellow star filled" else "yellow star outline",
-                modifier = Modifier.align(Alignment.TopEnd)
-            )
-        }
-
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PokemonHeaderPreview() {
-    ComposePokedexTheme() {
-        PokemonHeader("Pikachu", 25, true)
-    }
-}
-
-@Composable
-fun Greeting(pokemon: Pokemon, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(electricYellow)
-    ) {
-        PokemonHeader(pokemon.name, pokemon.number, pokemon.fav)
-        PokemonCard(
-            pokemon.name,
-            pokemon.weight,
-            pokemon.height,
-            pokemon.description,
-            pokemon.ability,
-            pokemon.image,
-            pokemon.type
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ComposePokedexTheme {
-        Greeting(
-            Pokemon(
-                "Pikachu",
-                25,
-                "Electric",
-                "Pokemon amarillo",
-                0.4f,
-                6f,
-                true,
-                "Estatíca",
-                R.drawable.pikachu
-            )
-        )
     }
 }
