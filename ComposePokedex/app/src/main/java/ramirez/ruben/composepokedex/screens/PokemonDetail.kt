@@ -2,17 +2,9 @@ package ramirez.ruben.composepokedex.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -21,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -34,21 +27,16 @@ import ramirez.ruben.composepokedex.ui.theme.ComposePokedexTheme
 import ramirez.ruben.composepokedex.ui.theme.electricYellow
 import ramirez.ruben.composepokedex.ui.theme.offWhite
 
-
 @Composable
 fun PokemonCard(
-    name: String,
-    weight: Float,
-    height: Float,
-    description: String,
-    ability: String,
-    image: Int,
-    type: String
+    pokemon: Pokemon,
+    adjacentPokemons: Pair<Pokemon?, Pokemon?>,
+    onNavigateDetail: (Int) -> Unit
 ) {
     Box(contentAlignment = Alignment.TopCenter) {
         Image(
-            painter = painterResource(image),
-            contentDescription = name,
+            painter = painterResource(pokemon.image),
+            contentDescription = pokemon.name,
             Modifier
                 .offset(0.dp, -80.dp)
                 .zIndex(2f)
@@ -64,7 +52,7 @@ fun PokemonCard(
         ) {
             Column(Modifier.fillMaxWidth()) {
                 Chip(
-                    type,
+                    pokemon.type,
                     electricYellow,
                     Modifier
                         .padding(top = 70.dp)
@@ -76,11 +64,11 @@ fun PokemonCard(
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 5.dp), horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Column() {
-                        Ability("row", label = "Altura", "${height}m")
-                        Ability("row", "Peso", "${weight}kg")
+                    Column {
+                        Ability("row", label = "Altura", "${pokemon.height}m")
+                        Ability("row", "Peso", "${pokemon.weight}kg")
                     }
-                    Ability("column", label = "Habilidad", value = ability)
+                    Ability("column", label = "Habilidad", value = pokemon.ability)
                 }
 
                 Row(
@@ -89,35 +77,67 @@ fun PokemonCard(
                         .align(Alignment.CenterHorizontally)
                         .padding(25.dp)
                 ) {
-                    Text(description)
+                    Text(pokemon.description)
                 }
-                Spacer(modifier = Modifier.weight(1f))
 
-                PokemonFooter()
+//-----
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(horizontal = 25.dp)
+                ) {
+                    if (pokemon.evolutions.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = "Evoluciones",
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                        }
+                        items(pokemon.evolutions) { evolution ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp)
+                            ) {
+                                Image(
+                                    painter = painterResource(id = evolution.image),
+                                    contentDescription = "Evolución a ${evolution.name}",
+                                    modifier = Modifier.size(50.dp)
+                                )
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Text(text = evolution.name)
+                            }
+                        }
+                    }
+                }
 
+                PokemonFooter(
+                    previousPokemon = adjacentPokemons.first,
+                    nextPokemon = adjacentPokemons.second,
+                    onNavigate = onNavigateDetail
+                )
             }
-
         }
     }
 }
 
 @Composable
-fun PokemonDetailScreen(pokemon: Pokemon, modifier: Modifier = Modifier) {
+fun PokemonDetailScreen(
+    pokemon: Pokemon,
+    adjacentPokemons: Pair<Pokemon?, Pokemon?>,
+    onNavigateDetail: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(electricYellow)
     ) {
         PokemonHeader(pokemon.name, pokemon.number, pokemon.fav)
-        PokemonCard(
-            pokemon.name,
-            pokemon.weight,
-            pokemon.height,
-            pokemon.description,
-            pokemon.ability,
-            pokemon.image,
-            pokemon.type
-        )
+        PokemonCard(pokemon, adjacentPokemons, onNavigateDetail)
     }
 }
 
@@ -126,7 +146,7 @@ fun PokemonDetailScreen(pokemon: Pokemon, modifier: Modifier = Modifier) {
 fun GreetingPreview() {
     ComposePokedexTheme {
         PokemonDetailScreen(
-            Pokemon(
+            pokemon = Pokemon(
                 "Pikachu",
                 25,
                 "Electric",
@@ -136,7 +156,9 @@ fun GreetingPreview() {
                 true,
                 "Estatíca",
                 R.drawable.pikachu
-            )
+            ),
+            adjacentPokemons = Pair(null, null),
+            onNavigateDetail = {}
         )
     }
 }

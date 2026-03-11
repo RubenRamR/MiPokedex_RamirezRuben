@@ -33,7 +33,8 @@ import androidx.compose.ui.zIndex
 import ramirez.ruben.composepokedex.Components.Ability
 import ramirez.ruben.composepokedex.Components.Chip
 import ramirez.ruben.composepokedex.domain.Pokemon
-import ramirez.ruben.composepokedex.navigation.MyApp
+import ramirez.ruben.composepokedex.navigation.PokedexApp
+import ramirez.ruben.composepokedex.navigation.PokedexApp
 import ramirez.ruben.composepokedex.screens.PokemonDetailScreen
 import ramirez.ruben.composepokedex.ui.theme.ComposePokedexTheme
 import ramirez.ruben.composepokedex.ui.theme.electricYellow
@@ -41,25 +42,13 @@ import ramirez.ruben.composepokedex.ui.theme.offWhite
 
 class MainActivity : ComponentActivity() {
 
-    val pokemon = Pokemon(
-        "Pikachu",
-        25,
-        "Electric",
-        "Pikachu, el Pokémon Ratón (tipo eléctrico#025), es conocido por almacenar electricidad en sus mejillas rojas, lanzando descargas cuando se enfada o se siente amenazado. Es amarillo con rayas marrones en la espalda, orejas largas con puntas negras y una cola en forma de rayo.",
-        0.4f,
-        6f,
-        true,
-        "Electricidad Estática",
-        R.drawable.pikachu
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
             ComposePokedexTheme {
-                MyApp()
+                PokedexApp()
             }
         }
     }
